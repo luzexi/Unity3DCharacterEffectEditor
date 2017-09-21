@@ -1,0 +1,516 @@
+fileFormatVersion: 2
+guid: 8036e4a0e1445ba4e9a91401d91af14d
+timeCreated: 1505976497
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: arm_L_Bone004
+    100002: arm_r_Bone004
+    100004: Bone003
+    100006: Bone005
+    100008: Bone005 1
+    100010: Bone009
+    100012: Bone009 1
+    100014: Bone012
+    100016: Bone012 1
+    100018: Bone014
+    100020: Bone017
+    100022: Bone017 1
+    100024: Bone019
+    100026: Bone019 1
+    100028: Bone021
+    100030: Bone021 1
+    100032: Bone024
+    100034: Bone024 1
+    100036: Bone026
+    100038: Bone028
+    100040: Box01
+    100042: Box02
+    100044: //RootNode
+    100046: caocao_body_model
+    100048: caocao_head_model
+    100050: caocao_model
+    100052: caocao_pifeng_model
+    100054: effect_caocao_standby_4_1
+    100056: effect_caocao_standby_4_1_2
+    100058: effect_caocao_standby_4_2
+    100060: effect_caocao_standby_4_2_2
+    100062: foot_L_Bone008
+    100064: foot_r_Bone008
+    100066: head_Bone002
+    100068: jianjia_L_Bone018
+    100070: jianjia_r_Bone018
+    100072: leg1_L_Bone006
+    100074: leg1_r_Bone006
+    100076: leg_L_Bone007
+    100078: leg_r_Bone007
+    100080: pifeng_L_Bone015
+    100082: pifeng_L_Bone016
+    100084: pifeng_r_Bone015
+    100086: pifeng_r_Bone016
+    100088: qun_L_Bone022
+    100090: qun_L_Bone023
+    100092: qun_r_Bone022
+    100094: qun_r_Bone023
+    100096: qundai_Bone013
+    100098: qundai_L_Bone010
+    100100: qundai_L_Bone011
+    100102: qundai_r_Bone010
+    100104: qundai_r_Bone011
+    100106: wuqi_Bone025
+    100108: wuqi_model
+    100110: wuqi_piaodai_Bone027
+    100112: xiong_Bone001
+    100114: xiuzi_L_Bone020
+    100116: xiuzi_r_Bone020
+    400000: arm_L_Bone004
+    400002: arm_r_Bone004
+    400004: Bone003
+    400006: Bone005
+    400008: Bone005 1
+    400010: Bone009
+    400012: Bone009 1
+    400014: Bone012
+    400016: Bone012 1
+    400018: Bone014
+    400020: Bone017
+    400022: Bone017 1
+    400024: Bone019
+    400026: Bone019 1
+    400028: Bone021
+    400030: Bone021 1
+    400032: Bone024
+    400034: Bone024 1
+    400036: Bone026
+    400038: Bone028
+    400040: Box01
+    400042: Box02
+    400044: //RootNode
+    400046: caocao_body_model
+    400048: caocao_head_model
+    400050: caocao_model
+    400052: caocao_pifeng_model
+    400054: effect_caocao_standby_4_1
+    400056: effect_caocao_standby_4_1_2
+    400058: effect_caocao_standby_4_2
+    400060: effect_caocao_standby_4_2_2
+    400062: foot_L_Bone008
+    400064: foot_r_Bone008
+    400066: head_Bone002
+    400068: jianjia_L_Bone018
+    400070: jianjia_r_Bone018
+    400072: leg1_L_Bone006
+    400074: leg1_r_Bone006
+    400076: leg_L_Bone007
+    400078: leg_r_Bone007
+    400080: pifeng_L_Bone015
+    400082: pifeng_L_Bone016
+    400084: pifeng_r_Bone015
+    400086: pifeng_r_Bone016
+    400088: qun_L_Bone022
+    400090: qun_L_Bone023
+    400092: qun_r_Bone022
+    400094: qun_r_Bone023
+    400096: qundai_Bone013
+    400098: qundai_L_Bone010
+    400100: qundai_L_Bone011
+    400102: qundai_r_Bone010
+    400104: qundai_r_Bone011
+    400106: wuqi_Bone025
+    400108: wuqi_model
+    400110: wuqi_piaodai_Bone027
+    400112: xiong_Bone001
+    400114: xiuzi_L_Bone020
+    400116: xiuzi_r_Bone020
+    2300000: Box01
+    2300002: Box02
+    3300000: Box01
+    3300002: Box02
+    4300000: wuqi_model
+    4300002: caocao_model
+    4300004: caocao_pifeng_model
+    4300006: caocao_head_model
+    4300008: caocao_body_model
+    4300010: Box01
+    4300012: Box02
+    4300014: effect_caocao_standby_4_1
+    4300016: effect_caocao_standby_4_2
+    4300018: effect_caocao_standby_4_2_2
+    4300020: effect_caocao_standby_4_1_2
+    7400000: Take 001
+    7400002: idle
+    7400004: attack
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: caocao_body_model
+    13700002: caocao_head_model
+    13700004: caocao_model
+    13700006: caocao_pifeng_model
+    13700008: effect_caocao_standby_4_1
+    13700010: effect_caocao_standby_4_1_2
+    13700012: effect_caocao_standby_4_2
+    13700014: effect_caocao_standby_4_2_2
+    13700016: wuqi_model
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: idle
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 45
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Box01
+        weight: 1
+      - path: Box01/Box02
+        weight: 1
+      - path: Box01/Box02/arm_L_Bone004
+        weight: 1
+      - path: Box01/Box02/arm_L_Bone004/Bone005
+        weight: 1
+      - path: Box01/Box02/arm_L_Bone004/xiuzi_L_Bone020
+        weight: 1
+      - path: Box01/Box02/arm_L_Bone004/xiuzi_L_Bone020/Bone021
+        weight: 1
+      - path: Box01/Box02/arm_r_Bone004
+        weight: 1
+      - path: Box01/Box02/arm_r_Bone004/Bone005 1
+        weight: 1
+      - path: Box01/Box02/arm_r_Bone004/xiuzi_r_Bone020
+        weight: 1
+      - path: Box01/Box02/arm_r_Bone004/xiuzi_r_Bone020/Bone021 1
+        weight: 1
+      - path: Box01/Box02/jianjia_L_Bone018
+        weight: 1
+      - path: Box01/Box02/jianjia_L_Bone018/Bone019
+        weight: 1
+      - path: Box01/Box02/jianjia_r_Bone018
+        weight: 1
+      - path: Box01/Box02/jianjia_r_Bone018/Bone019 1
+        weight: 1
+      - path: Box01/Box02/pifeng_L_Bone015
+        weight: 1
+      - path: Box01/Box02/pifeng_L_Bone015/pifeng_L_Bone016
+        weight: 1
+      - path: Box01/Box02/pifeng_L_Bone015/pifeng_L_Bone016/Bone017
+        weight: 1
+      - path: Box01/Box02/pifeng_r_Bone015
+        weight: 1
+      - path: Box01/Box02/pifeng_r_Bone015/pifeng_r_Bone016
+        weight: 1
+      - path: Box01/Box02/pifeng_r_Bone015/pifeng_r_Bone016/Bone017 1
+        weight: 1
+      - path: Box01/Box02/qun_L_Bone022
+        weight: 1
+      - path: Box01/Box02/qun_L_Bone022/qun_L_Bone023
+        weight: 1
+      - path: Box01/Box02/qun_L_Bone022/qun_L_Bone023/Bone024
+        weight: 1
+      - path: Box01/Box02/qun_r_Bone022
+        weight: 1
+      - path: Box01/Box02/qun_r_Bone022/qun_r_Bone023
+        weight: 1
+      - path: Box01/Box02/qun_r_Bone022/qun_r_Bone023/Bone024 1
+        weight: 1
+      - path: Box01/Box02/qundai_Bone013
+        weight: 1
+      - path: Box01/Box02/qundai_Bone013/Bone014
+        weight: 1
+      - path: Box01/Box02/qundai_L_Bone010
+        weight: 1
+      - path: Box01/Box02/qundai_L_Bone010/qundai_L_Bone011
+        weight: 1
+      - path: Box01/Box02/qundai_L_Bone010/qundai_L_Bone011/Bone012
+        weight: 1
+      - path: Box01/Box02/qundai_r_Bone010
+        weight: 1
+      - path: Box01/Box02/qundai_r_Bone010/qundai_r_Bone011
+        weight: 1
+      - path: Box01/Box02/qundai_r_Bone010/qundai_r_Bone011/Bone012 1
+        weight: 1
+      - path: Box01/Box02/wuqi_Bone025
+        weight: 1
+      - path: Box01/Box02/wuqi_Bone025/Bone026
+        weight: 1
+      - path: Box01/Box02/wuqi_Bone025/wuqi_piaodai_Bone027
+        weight: 1
+      - path: Box01/Box02/wuqi_Bone025/wuqi_piaodai_Bone027/Bone028
+        weight: 1
+      - path: Box01/Box02/xiong_Bone001
+        weight: 1
+      - path: Box01/Box02/xiong_Bone001/head_Bone002
+        weight: 1
+      - path: Box01/Box02/xiong_Bone001/head_Bone002/Bone003
+        weight: 1
+      - path: Box01/leg1_L_Bone006
+        weight: 1
+      - path: Box01/leg1_L_Bone006/leg_L_Bone007
+        weight: 1
+      - path: Box01/leg1_L_Bone006/leg_L_Bone007/foot_L_Bone008
+        weight: 1
+      - path: Box01/leg1_L_Bone006/leg_L_Bone007/foot_L_Bone008/Bone009
+        weight: 1
+      - path: Box01/leg1_r_Bone006
+        weight: 1
+      - path: Box01/leg1_r_Bone006/leg_r_Bone007
+        weight: 1
+      - path: Box01/leg1_r_Bone006/leg_r_Bone007/foot_r_Bone008
+        weight: 1
+      - path: Box01/leg1_r_Bone006/leg_r_Bone007/foot_r_Bone008/Bone009 1
+        weight: 1
+      - path: caocao_body_model
+        weight: 1
+      - path: caocao_head_model
+        weight: 1
+      - path: caocao_model
+        weight: 1
+      - path: caocao_pifeng_model
+        weight: 1
+      - path: effect_caocao_standby_4_1
+        weight: 1
+      - path: effect_caocao_standby_4_1_2
+        weight: 1
+      - path: effect_caocao_standby_4_2
+        weight: 1
+      - path: effect_caocao_standby_4_2_2
+        weight: 1
+      - path: wuqi_model
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: attack
+      takeName: Take 001
+      firstFrame: 46
+      lastFrame: 142
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Box01
+        weight: 1
+      - path: Box01/Box02
+        weight: 1
+      - path: Box01/Box02/arm_L_Bone004
+        weight: 1
+      - path: Box01/Box02/arm_L_Bone004/Bone005
+        weight: 1
+      - path: Box01/Box02/arm_L_Bone004/xiuzi_L_Bone020
+        weight: 1
+      - path: Box01/Box02/arm_L_Bone004/xiuzi_L_Bone020/Bone021
+        weight: 1
+      - path: Box01/Box02/arm_r_Bone004
+        weight: 1
+      - path: Box01/Box02/arm_r_Bone004/Bone005 1
+        weight: 1
+      - path: Box01/Box02/arm_r_Bone004/xiuzi_r_Bone020
+        weight: 1
+      - path: Box01/Box02/arm_r_Bone004/xiuzi_r_Bone020/Bone021 1
+        weight: 1
+      - path: Box01/Box02/jianjia_L_Bone018
+        weight: 1
+      - path: Box01/Box02/jianjia_L_Bone018/Bone019
+        weight: 1
+      - path: Box01/Box02/jianjia_r_Bone018
+        weight: 1
+      - path: Box01/Box02/jianjia_r_Bone018/Bone019 1
+        weight: 1
+      - path: Box01/Box02/pifeng_L_Bone015
+        weight: 1
+      - path: Box01/Box02/pifeng_L_Bone015/pifeng_L_Bone016
+        weight: 1
+      - path: Box01/Box02/pifeng_L_Bone015/pifeng_L_Bone016/Bone017
+        weight: 1
+      - path: Box01/Box02/pifeng_r_Bone015
+        weight: 1
+      - path: Box01/Box02/pifeng_r_Bone015/pifeng_r_Bone016
+        weight: 1
+      - path: Box01/Box02/pifeng_r_Bone015/pifeng_r_Bone016/Bone017 1
+        weight: 1
+      - path: Box01/Box02/qun_L_Bone022
+        weight: 1
+      - path: Box01/Box02/qun_L_Bone022/qun_L_Bone023
+        weight: 1
+      - path: Box01/Box02/qun_L_Bone022/qun_L_Bone023/Bone024
+        weight: 1
+      - path: Box01/Box02/qun_r_Bone022
+        weight: 1
+      - path: Box01/Box02/qun_r_Bone022/qun_r_Bone023
+        weight: 1
+      - path: Box01/Box02/qun_r_Bone022/qun_r_Bone023/Bone024 1
+        weight: 1
+      - path: Box01/Box02/qundai_Bone013
+        weight: 1
+      - path: Box01/Box02/qundai_Bone013/Bone014
+        weight: 1
+      - path: Box01/Box02/qundai_L_Bone010
+        weight: 1
+      - path: Box01/Box02/qundai_L_Bone010/qundai_L_Bone011
+        weight: 1
+      - path: Box01/Box02/qundai_L_Bone010/qundai_L_Bone011/Bone012
+        weight: 1
+      - path: Box01/Box02/qundai_r_Bone010
+        weight: 1
+      - path: Box01/Box02/qundai_r_Bone010/qundai_r_Bone011
+        weight: 1
+      - path: Box01/Box02/qundai_r_Bone010/qundai_r_Bone011/Bone012 1
+        weight: 1
+      - path: Box01/Box02/wuqi_Bone025
+        weight: 1
+      - path: Box01/Box02/wuqi_Bone025/Bone026
+        weight: 1
+      - path: Box01/Box02/wuqi_Bone025/wuqi_piaodai_Bone027
+        weight: 1
+      - path: Box01/Box02/wuqi_Bone025/wuqi_piaodai_Bone027/Bone028
+        weight: 1
+      - path: Box01/Box02/xiong_Bone001
+        weight: 1
+      - path: Box01/Box02/xiong_Bone001/head_Bone002
+        weight: 1
+      - path: Box01/Box02/xiong_Bone001/head_Bone002/Bone003
+        weight: 1
+      - path: Box01/leg1_L_Bone006
+        weight: 1
+      - path: Box01/leg1_L_Bone006/leg_L_Bone007
+        weight: 1
+      - path: Box01/leg1_L_Bone006/leg_L_Bone007/foot_L_Bone008
+        weight: 1
+      - path: Box01/leg1_L_Bone006/leg_L_Bone007/foot_L_Bone008/Bone009
+        weight: 1
+      - path: Box01/leg1_r_Bone006
+        weight: 1
+      - path: Box01/leg1_r_Bone006/leg_r_Bone007
+        weight: 1
+      - path: Box01/leg1_r_Bone006/leg_r_Bone007/foot_r_Bone008
+        weight: 1
+      - path: Box01/leg1_r_Bone006/leg_r_Bone007/foot_r_Bone008/Bone009 1
+        weight: 1
+      - path: caocao_body_model
+        weight: 1
+      - path: caocao_head_model
+        weight: 1
+      - path: caocao_model
+        weight: 1
+      - path: caocao_pifeng_model
+        weight: 1
+      - path: effect_caocao_standby_4_1
+        weight: 1
+      - path: effect_caocao_standby_4_1_2
+        weight: 1
+      - path: effect_caocao_standby_4_2
+        weight: 1
+      - path: effect_caocao_standby_4_2_2
+        weight: 1
+      - path: wuqi_model
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

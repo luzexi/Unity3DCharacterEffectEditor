@@ -22,7 +22,7 @@ public class ActionTable : ScriptableObject
 	public bool m_IsLookTarget;
 
 	[SerializeField]
-	public List<ActionObject> m_ActionObjects;
+	public List<ActionObject> m_ActionObjects = new List<ActionObject>();
 
 
 	public void CopyFrom( ActionTable src )
@@ -94,10 +94,13 @@ public class ActionTable : ScriptableObject
 		}
 		{
 			GUILayout.BeginVertical();
-			for( int i = 0 ; i<this.m_ActionObjects.Count ; i++ )
+			if(m_ActionObjects != null)
 			{
-				ActionObject ao = this.m_ActionObjects[i];
-				ao.Draw( this );
+				for( int i = 0 ; i<this.m_ActionObjects.Count ; i++ )
+				{
+					ActionObject ao = this.m_ActionObjects[i];
+					ao.Draw( this );
+				}
 			}
 			GUILayout.EndVertical();
 		}
