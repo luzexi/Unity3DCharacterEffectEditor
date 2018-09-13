@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -32,7 +33,7 @@ public partial class ActionObject
 		public Vector3 offset = Vector3.zero;	//offset pos
 		public string parent = string.Empty;	//parent
 		public float time = 0.1f;			//time
-		public bool mHiden = false;	//is hiden
+		public bool mHiden = false;	//editor
 
 		public object Clone()
 		{
@@ -47,6 +48,44 @@ public partial class ActionObject
 			ret.parent	= parent;
 			ret.time	= time;
 			return ret;
+		}
+
+		public void Read(BinaryReader br)
+		{
+			onoff = (bool)br.ReadBoolean();
+			type = br.ReadString();
+			isTarget = (bool)br.ReadBoolean();
+			bindEffect = (bool)br.ReadBoolean();
+			size.x = br.ReadSingle();
+			size.y = br.ReadSingle();
+			size.z = br.ReadSingle();
+			rotate.x = br.ReadSingle();
+			rotate.y = br.ReadSingle();
+			rotate.z = br.ReadSingle();
+			offset.x = br.ReadSingle();
+			offset.y = br.ReadSingle();
+			offset.z = br.ReadSingle();
+			parent = br.ReadString();
+			time = br.ReadSingle();
+		}
+
+		public void Write(BinaryWriter bw)
+		{
+			bw.Write(onoff);
+			bw.Write(type);
+			bw.Write(isTarget);
+			bw.Write(bindEffect);
+			bw.Write(size.x);
+			bw.Write(size.y);
+			bw.Write(size.z);
+			bw.Write(rotate.x);
+			bw.Write(rotate.y);
+			bw.Write(rotate.z);
+			bw.Write(offset.x);
+			bw.Write(offset.y);
+			bw.Write(offset.z);
+			bw.Write(parent);
+			bw.Write(time);
 		}
 
 #if UNITY_EDITOR
@@ -121,7 +160,7 @@ public partial class ActionObject
 		public Vector3	scale	= Vector3.one;		//scale
 		public string	parent	= string.Empty;		//parent
 		public bool bullet = false;					//is bullet
-		public bool mHiden = false;	//is hiden
+		public bool mHiden = false;	//editor
 
 
 		public bool		isDependPosition	= true;	//
@@ -145,6 +184,49 @@ public partial class ActionObject
 			ret.isDependScale		= isDependScale;
 			return ret;
 		}
+
+		public void Read(BinaryReader br)
+		{
+			name = br.ReadString();
+			time = br.ReadSingle();
+			onoff = (bool)br.ReadBoolean();
+			offset.x = br.ReadSingle();
+			offset.y = br.ReadSingle();
+			offset.z = br.ReadSingle();
+			rotate.x = br.ReadSingle();
+			rotate.y = br.ReadSingle();
+			rotate.z = br.ReadSingle();
+			scale.x = br.ReadSingle();
+			scale.y = br.ReadSingle();
+			scale.z = br.ReadSingle();
+			parent = br.ReadString();
+			bullet = (bool)br.ReadBoolean();
+			isDependPosition = (bool)br.ReadBoolean();
+			isDependRotation = (bool)br.ReadBoolean();
+			isDependScale = (bool)br.ReadBoolean();
+		}
+
+		public void Write(BinaryWriter bw)
+		{
+			bw.Write(name);
+			bw.Write(time);
+			bw.Write(onoff);
+			bw.Write(offset.x);
+			bw.Write(offset.y);
+			bw.Write(offset.z);
+			bw.Write(rotate.x);
+			bw.Write(rotate.y);
+			bw.Write(rotate.z);
+			bw.Write(scale.x);
+			bw.Write(scale.y);
+			bw.Write(scale.z);
+			bw.Write(parent);
+			bw.Write(bullet);
+			bw.Write(isDependPosition);
+			bw.Write(isDependRotation);
+			bw.Write(isDependScale);
+		}
+
 #if UNITY_EDITOR
 		public void Draw()
 		{
@@ -230,6 +312,18 @@ public partial class ActionObject
 			return msg;
 		}
 
+		public void Read(BinaryReader br)
+		{
+			m_Function = (ActionMessageCommand)br.ReadInt32();
+			m_Args = br.ReadString();
+		}
+
+		public void Write(BinaryWriter bw)
+		{
+			bw.Write((int)m_Function);
+			bw.Write(m_Args);
+		}
+
 #if UNITY_EDITOR
 		public void Draw( ActionObject.Event ev )
 		{
@@ -273,9 +367,6 @@ public partial class ActionObject
 
 		[SerializeField]
 		public float time = 0f;
-
-		[SerializeField]
-		public List<Message> messages = new List<Message>();
 		
 		[SerializeField]
 		public Hit hit = new Hit();
@@ -284,7 +375,43 @@ public partial class ActionObject
 		public Effect effect = new Effect();
 
 		[SerializeField]
-		public bool mHiden = false;
+		public List<Message> messages = new List<Message>();
+
+		[SerializeField]
+		public bool mHiden = false;	//editor
+
+		public void Read(BinaryReader br)
+		{
+			m_AniName = br.ReadString();
+			m_AniWarp = (WrapMode)br.ReadInt32();
+			sound = br.ReadString();
+			time = br.ReadSingle();
+			hit.Read(br);
+			effect.Read(br);
+			int count = br.ReadInt32();
+			messages.Clear();
+			for(int i = 0 ; i<count ; i++)
+			{
+				Message ms = new Message();
+				ms.Read(br);
+				messages.Add(ms);
+			}
+		}
+
+		public void Write(BinaryWriter bw)
+		{
+			bw.Write(m_AniName);
+			bw.Write((int)m_AniWarp);
+			bw.Write(sound);
+			bw.Write(time);
+			hit.Write(bw);
+			effect.Write(bw);
+			bw.Write(messages.Count);
+			for(int i = 0 ; i<messages.Count ; i++)
+			{
+				messages[i].Write(bw);
+			}
+		}
 
 #if UNITY_EDITOR
 		private Texture2D m_timelineBGTex;

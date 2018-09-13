@@ -75,6 +75,23 @@ public class ActionEditWindow : EditorWindow
         		this.m_ActionTable.OnSave(path);
         	}
         }
+        if (GUILayout.Button("Read Action"))
+        {
+            this.path = EditorUtility.OpenFilePanel("Open Asset...", Application.dataPath + "/App/Art/Resources/Battle/Action/", "bytes");
+            if (this.path != string.Empty)
+            {
+                this.m_ActionTable.Read(this.path);
+                this.fileName = System.IO.Path.GetFileNameWithoutExtension( this.path );
+            }
+        }
+        if (GUILayout.Button("Write Action"))
+        {
+            this.path = EditorUtility.SaveFilePanel("Save Asset...", Application.dataPath + "/App/Art/Resources/Battle/Action/",this.fileName,"bytes");
+            if( this.path != string.Empty )
+            {
+                this.m_ActionTable.Write(path);
+            }
+        }
 		EditorGUILayout.EndHorizontal();
 
 		if(this.m_ActionTable != null )

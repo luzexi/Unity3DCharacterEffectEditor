@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -26,13 +27,13 @@ public partial class ActionObject
 	public bool m_IsLookTarget;
 
 	[SerializeField]
-	public List<Event> m_Events = new List<Event>();
-
-	[SerializeField]
 	public float m_Time = 1f;
 
 	[SerializeField]
-	public bool mHiden = false;
+	public List<Event> m_Events = new List<Event>();
+
+	[SerializeField]
+	public bool mHiden = false;	//editor
 
 	private Event mCurrentEvent = null;
 	public Event CurrentEvent
@@ -77,6 +78,35 @@ public partial class ActionObject
 			m_Events.Add( dest );
 		}
 		m_Time = src.m_Time;
+	}
+
+	public void Read(BinaryReader br)
+	{
+		m_Name = br.ReadString();
+        m_IsLookTarget = (bool)br.ReadBoolean();
+        m_Time = br.ReadSingle();
+        int count = br.ReadInt32();
+        m_Events.Clear();
+        for(int i = 0 ; i<count ; i++)
+        {
+        	Event ev = new Event();
+        	ev.Read(br);
+        	m_Events.Add(ev);
+        }
+	}
+
+	public void Write(BinaryWriter bw)
+	{
+		// FileStream fs = new FileStream(filetowrite, FileMode.Create);
+        // BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
+        bw.Write(m_Name);
+        bw.Write(m_IsLookTarget);
+        bw.Write(m_Time);
+        bw.Write(m_Events.Count);
+        for(int i = 0 ; i<m_Events.Count ; i++)
+        {
+        	m_Events[i].Write(bw);
+        }
 	}
 
 #if UNITY_EDITOR

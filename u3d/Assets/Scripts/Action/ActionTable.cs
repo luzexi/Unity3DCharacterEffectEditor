@@ -1,5 +1,6 @@
 
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -104,6 +105,25 @@ public class ActionTable : ScriptableObject
 		}
 		GUILayout.EndVertical();
 	}
+
+	public void Read(string path)
+    {
+    	FileStream fs = new FileStream(path, FileMode.Open);
+        BinaryReader br = new BinaryReader(fs);
+        m_ActionObject = new ActionObject();
+        m_ActionObject.Read(br);
+        br.Close();
+    }
+
+    public void Write(string path)
+    {
+    	FileStream fs = new FileStream(path, FileMode.Create);
+        BinaryWriter bw = new BinaryWriter(fs);
+        m_ActionObject.Write(bw);
+        bw.Close();
+        fs.Close();
+        AssetDatabase.Refresh();
+    }
 
     public void OnLoad( string path )
     {
