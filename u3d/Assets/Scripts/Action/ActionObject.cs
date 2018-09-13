@@ -23,6 +23,9 @@ public partial class ActionObject
 	public string m_Name = string.Empty;
 
 	[SerializeField]
+	public bool m_IsLookTarget;
+
+	[SerializeField]
 	public List<Event> m_Events = new List<Event>();
 
 	[SerializeField]
@@ -55,6 +58,7 @@ public partial class ActionObject
 	public void CopyFrom(ActionObject src )
 	{
 		m_Name = src.m_Name;
+		m_IsLookTarget = src.m_IsLookTarget;
 		m_Events = new List<Event>();
 		foreach( Event ev in src.m_Events )
 		{
@@ -145,6 +149,7 @@ public partial class ActionObject
 			this.m_Name = GUILayout.TextField(this.m_Name);
 			GUILayout.Label("Time");
 			this.m_Time = EditorGUILayout.FloatField(this.m_Time);
+			this.m_IsLookTarget = GUILayout.Toggle(this.m_IsLookTarget ,"LookTarget");
 			if (GUILayout.Button("add Event"))
 			{
 				ActionObject.Event ev = new ActionObject.Event();

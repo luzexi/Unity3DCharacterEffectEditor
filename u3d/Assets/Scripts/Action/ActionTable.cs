@@ -19,16 +19,13 @@ using UnityEditor;
 public class ActionTable : ScriptableObject
 {
 	[SerializeField]
-	public bool m_IsLookTarget;
-
-	[SerializeField]
 	public ActionObject m_ActionObject = null;
 
 	public void CopyFrom( ActionTable src )
     {
 		// m_ActionObjects = new List<ActionObject>();
 		// orderingActionTable	= src.orderingActionTable;
-		m_IsLookTarget = src.m_IsLookTarget;
+		// m_IsLookTarget = src.m_IsLookTarget;
 		m_ActionObject = new ActionObject();
 		m_ActionObject.CopyFrom( src.m_ActionObject );
     }
@@ -36,7 +33,7 @@ public class ActionTable : ScriptableObject
     public void Init()
     {
     	m_ActionObject = new ActionObject();
-    	m_IsLookTarget = false;
+    	// m_IsLookTarget = false;
     }
 
 #if UNITY_EDITOR
@@ -84,7 +81,6 @@ public class ActionTable : ScriptableObject
 					ActionExcuteManager.instance.StartAction(this,this.player);
 				}
 			}
-			this.m_IsLookTarget = GUILayout.Toggle(this.m_IsLookTarget ,"LookTarget");
 			GUILayout.EndHorizontal();
 		}
 		{

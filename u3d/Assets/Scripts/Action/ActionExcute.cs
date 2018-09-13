@@ -42,14 +42,12 @@ public class ActionExcute
 	//update
 	public void Update()
 	{
+		if(mIsOver)
+			return;
 		if(null == owner)
 			return;
 		if(m_Table == null)
-		{
-			// GameObject.Destroy(this.gameObject);
-			mIsOver = true;
 			return;
-		}
 
 		float time = Time.time - this.m_StartTime;
 
