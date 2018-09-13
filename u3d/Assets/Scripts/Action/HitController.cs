@@ -14,14 +14,14 @@ using UnityEngine.UI;
 public class HitController : MonoBehaviour
 {
 	public float m_Time = 0;	//time
-	public HitData m_HitData = null;	//hit data
-	public GfxObject m_Owner = null;	//owner
-	public GfxObject m_Target = null;	//target
+	// public HitData m_HitData = null;	//hit data
+	public ICustomObject m_Owner = null;	//owner
+	public ICustomObject m_Target = null;	//target
 
 	private float m_StartTime = 0;	//start time
 
 	//create
-	public static HitController Create( GfxObject gfx , ActionObject.Hit hit , HitData hitdata , EffectController effectController , GfxObject target )
+	public static HitController Create( ICustomObject gfx , ActionObject.Hit hit, EffectController effectController , ICustomObject target )
 	{
 		GameObject obj = new GameObject("HitController");
 		HitController hitController = obj.AddComponent<HitController>();
@@ -36,7 +36,7 @@ public class HitController : MonoBehaviour
 		}
 		else
 		{
-			trans = gfx.gameObject.transform.Find(hit.parent);
+			trans = gfx.GetTransform().Find(hit.parent);
 		}
 
 		if( trans != null )
@@ -51,7 +51,7 @@ public class HitController : MonoBehaviour
 
 		obj.transform.localPosition = hit.offset;
 		hitController.m_Time = hit.time;
-		hitController.m_HitData = hitdata;
+		// hitController.m_HitData = hitdata;
 
 		obj.transform.localRotation = Quaternion.Euler(hit.rotate);
 

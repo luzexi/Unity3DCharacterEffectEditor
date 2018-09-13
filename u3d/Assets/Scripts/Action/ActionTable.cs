@@ -22,33 +22,27 @@ public class ActionTable : ScriptableObject
 	public bool m_IsLookTarget;
 
 	[SerializeField]
-	public List<ActionObject> m_ActionObjects = new List<ActionObject>();
-
+	public ActionObject m_ActionObject = null;
 
 	public void CopyFrom( ActionTable src )
     {
-		m_ActionObjects = new List<ActionObject>();
+		// m_ActionObjects = new List<ActionObject>();
 		// orderingActionTable	= src.orderingActionTable;
 		m_IsLookTarget = src.m_IsLookTarget;
-		foreach( ActionObject ao in src.m_ActionObjects )
-		{
-			ActionObject dest = new ActionObject();
-			dest.CopyFrom( ao );
-			m_ActionObjects.Add ( dest );
-
-		}
+		m_ActionObject = new ActionObject();
+		m_ActionObject.CopyFrom( src.m_ActionObject );
     }
 
     public void Init()
     {
-    	m_ActionObjects = new List<ActionObject>();
+    	m_ActionObject = new ActionObject();
     	m_IsLookTarget = false;
     }
 
 #if UNITY_EDITOR
 
-	private GameObject previewCharacterSource;
-	private GfxObject player;
+	public GameObject previewCharacterSource;
+	public ActionCustomObject player;
 	public void Draw()
 	{
 		GUILayout.BeginVertical();
@@ -63,7 +57,7 @@ public class ActionTable : ScriptableObject
 					GameObject.Destroy(this.player.gameObject);
 					this.player = null;
 				}
-				this.player = (GameObject.Instantiate(previewCharacterSource) as GameObject).AddComponent<GfxObject>();
+				this.player = (GameObject.Instantiate(previewCharacterSource) as GameObject).AddComponent<ActionCustomObject>();
 				GameObject cam = GameObject.Find("Main Camera");
 				if(cam == null)
 				{
@@ -74,6 +68,11 @@ public class ActionTable : ScriptableObject
 				// GameObject ingameObj = GameObject.Instantiate(Resources.Load("Scene/InGame")) as GameObject;
 				// InGameManager.I.GameCamera = game_c.GetComponent<Camera>();
 			}
+			if (GUILayout.Button("Reset"))
+			{
+				this.player.transform.localPosition = Vector3.zero;
+				this.player.transform.localRotation = Quaternion.identity;
+			}
 			if (GUILayout.Button("Play"))
 			{
 				if(this.player != null)
@@ -81,28 +80,31 @@ public class ActionTable : ScriptableObject
 					// ActionExcute.Create(this , this.player);
 					this.player.transform.localPosition = Vector3.zero;
 					this.player.transform.localRotation = Quaternion.identity;
-					this.player.SkillState(this);
+					// this.player.PlayAction(this);
+					ActionExcuteManager.instance.StartAction(this,this.player);
 				}
 			}
 			this.m_IsLookTarget = GUILayout.Toggle(this.m_IsLookTarget ,"LookTarget");
-			if (GUILayout.Button("+ ActionObject"))
-			{
-				ActionObject ao = new ActionObject();
-				this.m_ActionObjects.Add(ao);
-			}
 			GUILayout.EndHorizontal();
 		}
 		{
 			GUILayout.BeginVertical();
-			if(m_ActionObjects != null)
+			if(m_ActionObject != null)
 			{
-				for( int i = 0 ; i<this.m_ActionObjects.Count ; i++ )
-				{
-					ActionObject ao = this.m_ActionObjects[i];
-					ao.Draw( this );
-				}
+				m_ActionObject.Draw(this);
 			}
 			GUILayout.EndVertical();
+
+			// GUILayout.BeginVertical();
+			// if(m_ActionObjects != null)
+			// {
+			// 	for( int i = 0 ; i<this.m_ActionObjects.Count ; i++ )
+			// 	{
+			// 		ActionObject ao = this.m_ActionObjects[i];
+			// 		ao.Draw( this );
+			// 	}
+			// }
+			// GUILayout.EndVertical();
 		}
 		GUILayout.EndVertical();
 	}

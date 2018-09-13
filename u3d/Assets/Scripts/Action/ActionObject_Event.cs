@@ -32,6 +32,7 @@ public partial class ActionObject
 		public Vector3 offset = Vector3.zero;	//offset pos
 		public string parent = string.Empty;	//parent
 		public float time = 0.1f;			//time
+		public bool mHiden = false;	//is hiden
 
 		public object Clone()
 		{
@@ -52,6 +53,19 @@ public partial class ActionObject
 		public void Draw()
 		{
 			GUILayout.BeginVertical();
+			if(mHiden)
+			{
+				if (GUILayout.Button(">>>Hit"))
+				{
+					mHiden = false;
+				}
+				GUILayout.EndVertical();
+				return;
+			}
+			else if (GUILayout.Button("<<<Hit"))
+			{
+				mHiden = true;
+			}
 			GUILayout.Label("------------------- Hit -------------------");
 
 			{
@@ -99,7 +113,7 @@ public partial class ActionObject
 	[System.Serializable]
 	public class Effect : System.ICloneable
 	{
-		public string	id	= string.Empty;			//id of resources
+		public string	name	= string.Empty;			//id of resources
 		public float 	time = -1;					//cost time , time is Negative 
 		public bool		onoff = false;				//on or off
 		public Vector3	offset	= Vector3.zero;		//offset pos
@@ -107,6 +121,7 @@ public partial class ActionObject
 		public Vector3	scale	= Vector3.one;		//scale
 		public string	parent	= string.Empty;		//parent
 		public bool bullet = false;					//is bullet
+		public bool mHiden = false;	//is hiden
 
 
 		public bool		isDependPosition	= true;	//
@@ -116,7 +131,7 @@ public partial class ActionObject
 		public object Clone()
 		{
 			Effect ret = new Effect();
-			ret.id		= id;
+			ret.name = name;
 			ret.time = time;
 			ret.onoff	= onoff;
 			ret.offset	= offset;
@@ -134,13 +149,26 @@ public partial class ActionObject
 		public void Draw()
 		{
 			GUILayout.BeginVertical();
+			if(mHiden)
+			{
+				if (GUILayout.Button(">>>Effect"))
+				{
+					mHiden = false;
+				}
+				GUILayout.EndVertical();
+				return;
+			}
+			else if (GUILayout.Button("<<<Effect"))
+			{
+				mHiden = true;
+			}
 			GUILayout.Label("------------------- Effect -------------------");
 			{
 				GUILayout.BeginHorizontal();
 				this.onoff = GUILayout.Toggle(this.onoff,"onoff");
 				this.bullet = GUILayout.Toggle(this.bullet,"bullet");
-				GUILayout.Label("id"); 
-				this.id = GUILayout.TextField(this.id);
+				GUILayout.Label("name"); 
+				this.name = GUILayout.TextField(this.name);
 				GUILayout.EndHorizontal();
 
 				GUILayout.BeginHorizontal();
@@ -151,6 +179,20 @@ public partial class ActionObject
 				GUILayout.BeginHorizontal();
 				GUILayout.Label("parent");
 				this.parent = GUILayout.TextField(parent);
+				if( GUILayout.Button("copy-parent") )
+				{
+					if( Selection.activeGameObject != null )
+					{
+						string str = Selection.activeGameObject.transform.name;
+						Transform trans = Selection.activeGameObject.transform.parent;
+						for(; trans.GetComponent<ActionCustomObject>() == null;)
+						{
+							str = trans.name + "/" + str;
+							trans = trans.parent;
+						}
+						this.parent = str;
+					}
+				}
 				GUILayout.EndHorizontal();
 			}
 
@@ -176,7 +218,7 @@ public partial class ActionObject
 	public class Message : System.ICloneable
 	{
 		[SerializeField]
-		public string m_Function = string.Empty;
+		public ActionMessageCommand m_Function = ActionMessageCommand.None;
 		[SerializeField]
 		public string m_Args = string.Empty;
 
@@ -196,18 +238,21 @@ public partial class ActionObject
 			{
 				ev.messages.Remove(this);
 			}
-			string desc = "method:move";
+			m_Function = (ActionMessageCommand)EditorGUILayout.EnumPopup("Command",m_Function);
+			string desc = "Parameter";
 			switch(m_Function)
 			{
-				case "move":
+				case ActionMessageCommand.Move:
+					desc = "Parameter:speed;time";
+					break;
+				case ActionMessageCommand.Walkback:
 					desc = "Parameter:speed;time";
 					break;
 			}
 			GUILayout.Label(desc);
-			GUILayout.Label("Function");
-			this.m_Function = GUILayout.TextField(this.m_Function);
-			GUILayout.Label("arg1;arg2;arg3");
+			// GUILayout.Label("arg1;arg2;arg3...");
 			this.m_Args = GUILayout.TextField(this.m_Args);
+
 			GUILayout.EndHorizontal();
 		}
 #endif
@@ -218,7 +263,13 @@ public partial class ActionObject
 	public class Event
 	{
 		[SerializeField]
-		public string sound = "";
+		public string m_AniName = string.Empty;
+
+		[SerializeField]
+		public WrapMode m_AniWarp = WrapMode.Once;
+
+		[SerializeField]
+		public string sound = string.Empty;
 
 		[SerializeField]
 		public float time = 0f;
@@ -231,6 +282,9 @@ public partial class ActionObject
 
 		[SerializeField]
 		public Effect effect = new Effect();
+
+		[SerializeField]
+		public bool mHiden = false;
 
 #if UNITY_EDITOR
 		private Texture2D m_timelineBGTex;
@@ -262,25 +316,53 @@ public partial class ActionObject
 		public void Draw( ActionObject aco )
 		{
 			GUILayout.BeginVertical();
-			GUILayout.Label("****************** event ******************");
-			if (GUILayout.Button("- Event"))
-			{
-				aco.m_Events.Remove(this);
-			}
+			// GUILayout.Label("****************** event ******************");
+
+			// if (GUILayout.Button("delete Event"))
+			// {
+			// 	if(EditorUtility.DisplayDialog("Remove Event","Are you sure to remove Event?","Remove","Cancel"))
+			// 	{
+			// 		aco.m_Events.Remove(this);
+			// 		aco.mCurrentEvent = null;
+			// 	}
+			// }
 
 			float rateTime = time/aco.m_Time;
 			TimeLine(rateTime);
 			rateTime = GUILayout.HorizontalSlider(rateTime,0,1f,GUILayout.Width(window_size.x));
 			time = aco.m_Time * rateTime;
 
+			if(mHiden)
 			{
-				GUILayout.BeginHorizontal();
-				GUILayout.Label("sound");
-				this.sound = GUILayout.TextField(this.sound);
-				GUILayout.Label("time");
-				this.time = EditorGUILayout.FloatField(this.time);
-				GUILayout.EndHorizontal();
+				if (GUILayout.Button(">>>Event"))
+				{
+					mHiden = false;
+				}
+				GUILayout.EndVertical();
+				return;
 			}
+			else
+			{
+				if (GUILayout.Button("<<<Event"))
+				{
+					mHiden = true;
+				}
+			}
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("Animation Name");
+			this.m_AniName = GUILayout.TextField(this.m_AniName);
+			this.m_AniWarp = (WrapMode)EditorGUILayout.EnumPopup("Warp", m_AniWarp);
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			GUILayout.Label("sound");
+			this.sound = GUILayout.TextField(this.sound);
+			GUILayout.Label("time");
+			this.time = EditorGUILayout.FloatField(this.time);
+			GUILayout.EndHorizontal();
+			
+
 			{
 				hit.Draw();
 			}

@@ -11,6 +11,7 @@ public class MyWindow : EditorWindow
     [MenuItem("Window/My Window")]
     static void Init()
     {
+        // GUI.skin = AssetDatabase.LoadAssetAtPath("Assets/actionToolSkin",typeof(GUISkin)) as GUISkin;
         // Get existing open window or if none, make a new one:
         MyWindow window = (MyWindow)EditorWindow.GetWindow(typeof(MyWindow));
         window.Show();

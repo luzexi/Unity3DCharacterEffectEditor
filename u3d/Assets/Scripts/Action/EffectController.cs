@@ -19,15 +19,13 @@ public class EffectController : MonoBehaviour
 	[SerializeField]
 	public bool bullet = false;		//is bullet
 	[SerializeField]
-	public GfxObject owner = null;	//owner
+	public ICustomObject owner = null;	//owner
 	[SerializeField]
-	public GfxObject target = null;	//target
-	[SerializeField]
-	public HitData hitData = null;	//hit data
+	public ICustomObject target = null;	//target
 
 	private List<ParticleSystem> particles = null;
 	private List<Animation> animes = null;
-	private Animator animatorCache = null;	
+	private Animator animatorCache = null;
 	private float startTime = 0;	//start time
 	private Vector3 startPosition = Vector3.zero;	//start position
 	private float timeCounter = float.MaxValue;
@@ -62,15 +60,15 @@ public class EffectController : MonoBehaviour
 	{
 		if(bullet)
 		{
-			if( target != null && target.gameObject != null )
+			if( target != null && target.GetGameObject() != null )
 			{
-				if( (this.transform.position - this.target.transform.position).magnitude < 0.1f )
+				if( (this.transform.position - this.target.GetTransform().position).magnitude < 0.1f )
 				{
 					// target.OnHit( hitData , owner , target );
 					GameObject.Destroy(this.gameObject);
 					return;
 				}
-				this.transform.LookAt(this.target.transform);
+				this.transform.LookAt(this.target.GetTransform());
 			}
 			else
 			{

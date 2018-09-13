@@ -18,173 +18,100 @@ using UnityEditor;
 
 
 //action excute
-public class ActionExcute : MonoBehaviour
+public class ActionExcute
 {
 	public ActionTable m_Table = null;
+	private List<ActionCommand> mListActionCommand = new List<ActionCommand>(4);
+	private List<ActionCommand> mListActionCommandRemove = new List<ActionCommand>(4);
 
 	//temp
-	public GfxObject target = null;	//target
-	private GfxObject owner = null;		//owner
-	private HitData m_HitData = null;	//hit data
+	public ICustomObject target = null;	//target
+	private ICustomObject owner = null;		//owner
+	// private HitData m_HitData = null;	//hit data
 	private float m_StartTime = 0;		//start time
-	private ActionObject currentAction = null;
-	private float cur_old_time = -0.1f;
-	private float cur_now_time = -0.1f;
+	public bool mIsOver = false;	//is over
+	private List<ActionObject.Event> mListCurrentEvents = new List<ActionObject.Event>(4);
 
-	public static ActionExcute Create( ActionTable table , GfxObject o , HitData hitdata = null )
-	{
-		GameObject obj = new GameObject("ActionExcute");
-		ActionExcute ac = obj.AddComponent<ActionExcute>();
-		ac.m_Table = table;
-		ac.m_HitData = hitdata;
-		ac.StartAction(o);
-		return ac;
-	}
-
-
-	public void StartAction( GfxObject obj )
+	public void StartAction( ICustomObject obj )
 	{
 		this.owner = obj;
 		this.m_StartTime = Time.time;
+		mIsOver = false;
 	}
-
-	//update time
-	private void UpdateTime( float update_time )
-	{
-		cur_old_time = cur_now_time;
-		cur_now_time = update_time;
-	}
-
-	//update animation
-	public void UpdateAnime( ActionObject ac )
-	{
-		if ( string.IsNullOrEmpty( ac.m_AniName ) )
-			return;
-
-		if ( cur_old_time < 0f || cur_now_time < cur_old_time )
-		{
-			owner.m_cAni.Stop();
-			owner.m_cAni.Play( ac.m_AniName );
-			AnimationState anista = owner.m_cAni[ ac.m_AniName ];
-			if ( anista != null )
-			{
-				anista.time = cur_now_time;
-			}
-			else
-			{
-				Debug.LogError( "AnimeClip not Found! : " + ac.m_AniName );
-			}
-		}
-	}
-
-	//get event
-	public List<ActionObject.Event> GetEvents( ActionObject ac , float old_time, float now_time )
-	{
-		List<ActionObject.Event> events = new List<ActionObject.Event>();
-		if ( old_time <= now_time )
-		{
-			foreach( ActionObject.Event ev in ac.m_Events )
-			{//|xxxxx old -> oooooo <- now xxxxxxx|
-				if ( old_time < ev.time && ev.time <= now_time )
-				{
-					events.Add( ev );
-				}
-			}
-		}
-		else
-		{
-			//|ooo <- now xxxxxxxxxxxxxx old -> ooo|
-			foreach( ActionObject.Event ev in ac.m_Events )
-			{
-				if ( old_time < ev.time )
-				{
-					events.Add( ev );
-				}
-			}
-			foreach( ActionObject.Event ev in ac.m_Events )
-			{
-				if ( ev.time <= now_time )
-				{
-					events.Add( ev );
-				}
-			}
-		}
-		return events;
-	}
-
-	//get action object
-	private float GetCurrentAction( float time , out ActionObject currentAction )
-	{
-		currentAction = null;
-		foreach( ActionObject act in m_Table.m_ActionObjects )
-		{
-			if ( time < act.m_Time )
-			{
-				currentAction = act;
-				break;
-			}
-			time -= act.m_Time;
-		}
-        return time;
-	}
-
 
 	//update
-	void Update()
+	public void Update()
 	{
 		if(null == owner)
 			return;
 		if(m_Table == null)
 		{
-			GameObject.Destroy(this.gameObject);
+			// GameObject.Destroy(this.gameObject);
+			mIsOver = true;
 			return;
 		}
 
 		float time = Time.time - this.m_StartTime;
 
-		ActionObject actionOld = currentAction;
-		ActionObject ac =null;
-		time = GetCurrentAction(time,out ac);
-		currentAction = ac;
-
-		List<ActionObject.Event> events = new List<ActionObject.Event>();
-
-		if(ac == null)
+		if(m_Table.m_ActionObject.m_Time < time )
 		{
-			//over
-			GameObject.Destroy(this.gameObject);
+			mIsOver = true;
 			return;
 		}
 
-		if(ac != actionOld)	//add old unexcute event
+		mListCurrentEvents.Clear();
+		mListActionCommandRemove.Clear();
+
+		if(mListActionCommand.Count > 0)
 		{
-			if( actionOld != null )
+			for(int i = 0 ; i<mListActionCommand.Count ; i++)
 			{
-				events.AddRange(GetEvents(actionOld,cur_old_time,cur_now_time));
+				ActionCommand cmd = mListActionCommand[i];
+				if(!cmd.Update())
+				{
+					mListActionCommandRemove.Add(cmd);
+				}
+			}
+			for(int i = 0 ; i<mListActionCommandRemove.Count ; i++)
+			{
+				mListActionCommand.Remove(mListActionCommandRemove[i]);
 			}
 		}
-
-		UpdateTime(time);	//update time
-		UpdateAnime(ac);	//update animation
-		events.AddRange(GetEvents(ac , cur_old_time , cur_now_time));	//add current event
-		if(events.Count > 0)
+		
+		// foreach( ActionObject.Event ev in m_Table.m_ActionObject.m_Events )
+		for(int i = 0; i<m_Table.m_ActionObject.m_Events.Count ; i++)
 		{
-			foreach( ActionObject.Event ev in events )
+			if(m_Table.m_ActionObject.m_Events[i].time <= Time.time)
 			{
-				if( ev.messages.Count > 0 )
+				mListCurrentEvents.Add( m_Table.m_ActionObject.m_Events[i] );
+			}
+		}
+		if(mListCurrentEvents.Count > 0)
+		{
+			for(int i = 0 ; i<mListCurrentEvents.Count ; i++)
+			{
+				ActionObject.Event ev = mListCurrentEvents[i];
+				if(ev.messages.Count > 0)
 				{
-					for(int i = 0 ; i<ev.messages.Count ; i++ )
+					for(int j = 0 ; j<ev.messages.Count ; j++)
 					{
-						owner.SendMessage( "SkillMessage" ,ev.messages[i].m_Function + ";" + ev.messages[i].m_Args);
+						mListActionCommand.Add(ActionCommand.CallCommand(owner, ev.messages[j].m_Function, ev.messages[j].m_Args));
 					}
 				}
+				if(ev.m_AniName != string.Empty)
+				{
+					Animation ani = owner.GetAnimation();
+					AnimationState anista = ani[ ev.m_AniName ];
+					anista.wrapMode = ev.m_AniWarp;
+					ani.CrossFade(ev.m_AniName);
+				}
 				EffectController effectController = null;
-				if(ev.effect.id != string.Empty)
+				if(ev.effect.name != string.Empty)
 				{
 					if(ev.effect.onoff)
 					{
 						//create effect
-						effectController = EffectManager.I.Create( owner , ev.effect , this.m_HitData , target );
+						effectController = EffectManager.I.Create( owner , ev.effect, target );
 						if( effectController != null )
 						{
 							//todo
@@ -193,12 +120,12 @@ public class ActionExcute : MonoBehaviour
 				}
 				if ( ev.hit.onoff )
 				{
-					GfxObject tmpTarget = null;
+					ICustomObject tmpTarget = null;
 					if( ev.hit.isTarget )
 					{
 						tmpTarget = target;
 					}
-					HitController hitController = HitController.Create( owner , ev.hit , this.m_HitData , effectController , tmpTarget );
+					HitController hitController = HitController.Create( owner , ev.hit, effectController , tmpTarget );
 					if(hitController != null)
 					{
 						//todo

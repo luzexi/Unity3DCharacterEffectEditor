@@ -16,11 +16,6 @@ public class ActionEditWindow : EditorWindow
 	private string fileName = "NewAction";
 	private string path = "";
 
-	// private int m_CurActionIndex = 0;
-	// private ActionObject m_CurActionObj = null;
-	// private int m_CurEventIndex = 0;
-	// private ActionObject.Event m_CurEvent = null;
-
 	private Vector2 scrollPosition;
 
 
@@ -51,7 +46,15 @@ public class ActionEditWindow : EditorWindow
 		}
 		if (GUILayout.Button("Clear Action"))
         {
-        	this.m_ActionTable = new ActionTable();
+        	if( m_ActionTable != null && this.m_ActionTable.previewCharacterSource != null )
+        	{
+        		GameObject.Destroy(this.m_ActionTable.previewCharacterSource);
+        		this.m_ActionTable.previewCharacterSource= null;
+        		this.m_ActionTable.player = null;
+        	}
+        	// this.m_ActionTable = new ActionTable();
+        	this.m_ActionTable = ScriptableObject.CreateInstance<ActionTable>();
+        	this.m_ActionTable.Init();
             this.path = string.Empty;
 			this.fileName = "NewAction";
         }

@@ -27,18 +27,18 @@ public class EffectManager
 	}
 
 	//create effect
-	public EffectController Create( GfxObject owner , ActionObject.Effect effect  , HitData hitData , GfxObject target )
+	public EffectController Create( ICustomObject owner , ActionObject.Effect effect, ICustomObject target )
 	{
-		GameObject go = owner.gameObject;
-		GameObject obj = GameObject.Instantiate(Resources.Load("Battle/Effect/" + effect.id)) as GameObject;
+		Transform go = owner.GetTransform();
+		GameObject obj = GameObject.Instantiate(Resources.Load("Effect/" + effect.name)) as GameObject;
 		EffectController effectController = obj.AddComponent<EffectController>();
 		effectController.time = effect.time;
 		effectController.bullet = effect.bullet;
 		effectController.target = target;
 		effectController.owner = owner;
-		effectController.hitData = hitData;
+		// effectController.hitData = hitData;
 
-		Transform trans = go.gameObject.transform.Find(effect.parent);
+		Transform trans = go.Find(effect.parent);
 		if( trans != null )
 		{
 			obj.transform.parent = trans;
@@ -49,9 +49,9 @@ public class EffectManager
 
 		if( effect.parent == "null" )
 		{
-			obj.transform.parent = go.transform.parent;
-			obj.transform.localPosition = go.transform.localPosition + effect.offset;
-			obj.transform.localRotation = Quaternion.Euler(go.transform.localRotation.eulerAngles + effect.rotate);
+			obj.transform.parent = go.parent;
+			obj.transform.localPosition = go.localPosition + effect.offset;
+			obj.transform.localRotation = Quaternion.Euler(go.localRotation.eulerAngles + effect.rotate);
 			obj.transform.localScale = effect.scale;
 		}
 
