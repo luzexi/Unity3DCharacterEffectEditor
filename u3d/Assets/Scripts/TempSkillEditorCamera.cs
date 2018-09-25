@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class GameCamera : MonoBehaviour
+public class TempSkillEditorCamera : MonoBehaviour
 {
 	[SerializeField]
 	public Transform m_Target;

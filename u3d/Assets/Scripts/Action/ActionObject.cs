@@ -17,190 +17,240 @@ using UnityEditor;
 
 
 //effect object
-[System.Serializable]
 public partial class ActionObject
 {
-	[SerializeField]
-	public string m_Name = string.Empty;
+	// public string mName = string.Empty;
 
-	[SerializeField]
-	public bool m_IsLookTarget;
+	public float mTotalTime = 1f;
 
-	[SerializeField]
-	public float m_Time = 1f;
+	public List<ActionEvent> mEvents = new List<ActionEvent>();
 
-	[SerializeField]
-	public List<Event> m_Events = new List<Event>();
+	public ActionEvent mCurrentEvent = null;
+	public int mCurrentEventIndex = -1;
 
-	[SerializeField]
-	public bool mHiden = false;	//editor
+	public ICustomObject mCustomObject;
 
-	private Event mCurrentEvent = null;
-	public Event CurrentEvent
+	private Dictionary<int, GameObject> mDicPrefab = new Dictionary<int, GameObject>();
+
+	public float GetParentEventTime(ActionEvent _ev)
 	{
-		get
+		int index = mEvents.IndexOf(_ev);
+		if(index > 0)
 		{
-			return mCurrentEvent;
+			return mEvents[index - 1].mTime;
 		}
-		set
-		{
-			mCurrentEvent = value;
-		}
+		return 0;
 	}
-	private int mCurrentEventIndex = -1;
-	public int CurrentEventIndex
+
+	public void AddPrefab(int id, GameObject obj)
 	{
-		get
-		{
-			return mCurrentEventIndex;
-		}
+		mDicPrefab.Add(id, obj);
+	}
+
+	public void RemovePrefab(int id)
+	{
+		mDicPrefab.Remove(id);
+	}
+
+	public GameObject GetPrefab(int id)
+	{
+		return mDicPrefab[id];
 	}
 
 	public void CopyFrom(ActionObject src )
 	{
-		m_Name = src.m_Name;
-		m_IsLookTarget = src.m_IsLookTarget;
-		m_Events = new List<Event>();
-		foreach( Event ev in src.m_Events )
+		// mName = src.mName;
+		mTotalTime = src.mTotalTime;
+		mEvents = new List<ActionEvent>();
+		foreach( ActionEvent ev in src.mEvents )
 		{
-			Event dest = new Event();
-			dest.m_AniName = ev.m_AniName;
-			dest.m_AniWarp = ev.m_AniWarp;
-			dest.time = ev.time;
-			dest.hit = (Hit)ev.hit.Clone();
-			dest.effect = (Effect)ev.effect.Clone();
-			dest.sound = ev.sound;
-			dest.messages = new List<Message>();
-			foreach( Message msg in ev.messages )
-			{
-				dest.messages.Add((Message)(msg.Clone()));
-			}
-			m_Events.Add( dest );
+			ActionEvent dest = (ActionEvent)ev.Clone();
+			dest.SetActionObject(this);
+			mEvents.Add(dest);
 		}
-		m_Time = src.m_Time;
+	}
+
+	public void ReadJson(Dictionary<string,object> _jsonObj)
+	{
+		if(_jsonObj.ContainsKey("mTotalTime"))
+		{
+			mTotalTime = int.Parse(_jsonObj["mTotalTime"].ToString());
+		}
+		mEvents.Clear();
+		if(_jsonObj.ContainsKey("mEvents"))
+		{
+			List<object> lst = _jsonObj["mEvents"] as List<object>;
+			if(lst != null)
+			{
+				for(int i = 0 ; i<lst.Count ; i++)
+				{
+					Dictionary<string, object> action_json = lst[i] as Dictionary<string, object>;
+					ActionObject.ActionType actioinType = ActionObject.ActionType.DoNothing;
+					if(action_json.ContainsKey("mActionType"))
+					{
+						actioinType = (ActionObject.ActionType)int.Parse(action_json["mActionType"].ToString());
+					}
+					ActionEvent ev = ActionFactory.CreateActionEvent(actioinType);
+					if(ev != null)
+					{
+						ev.ReadJson(action_json);
+					}
+					mEvents.Add(ev);
+				}
+			}
+		}
 	}
 
 	public void Read(BinaryReader br)
 	{
-		m_Name = br.ReadString();
-        m_IsLookTarget = (bool)br.ReadBoolean();
-        m_Time = br.ReadSingle();
+		// mName = br.ReadString();
+        mTotalTime = br.ReadSingle();
         int count = br.ReadInt32();
-        m_Events.Clear();
+        mEvents.Clear();
         for(int i = 0 ; i<count ; i++)
         {
-        	Event ev = new Event();
-        	ev.Read(br);
-        	m_Events.Add(ev);
+        	ActionObject.ActionType actioinType = (ActionObject.ActionType)br.ReadInt32();
+        	ActionEvent ev = ActionFactory.CreateActionEvent(actioinType);
+        	if(ev != null)
+        	{
+	        	ev.SetActionObject(this);
+	        	ev.Read(br);
+	        	mEvents.Add(ev);
+	        }
         }
+	}
+
+	public void WriteJson(Dictionary<string,object> _json)
+	{
+		_json.Add("mTotalTime",mTotalTime.ToString());
+		List<object> lst = new List<object>();
+		for(int i = 0 ; i<mEvents.Count ; i++)
+		{
+			Dictionary<string,object> action_data = new Dictionary<string,object>();
+			mEvents[i].WriteJson(action_data);
+			lst.Add(action_data);
+		}
+		_json.Add("mEvents",lst);
 	}
 
 	public void Write(BinaryWriter bw)
 	{
 		// FileStream fs = new FileStream(filetowrite, FileMode.Create);
         // BinaryWriter bw = new BinaryWriter(fs, Encoding.Unicode);
-        bw.Write(m_Name);
-        bw.Write(m_IsLookTarget);
-        bw.Write(m_Time);
-        bw.Write(m_Events.Count);
-        for(int i = 0 ; i<m_Events.Count ; i++)
+        // bw.Write(mName);
+        bw.Write(mTotalTime);
+        bw.Write(mEvents.Count);
+        for(int i = 0 ; i<mEvents.Count ; i++)
         {
-        	m_Events[i].Write(bw);
+        	mEvents[i].Write(bw);
         }
 	}
 
 #if UNITY_EDITOR
-	private Texture2D m_timelineBGTex;
+	private Texture2D mTotalTimelineBGTex;
 	private Vector2 window_size = new Vector2(521,20);
 
 	private void TimeLine()
 	{
-		if ( m_timelineBGTex == null )
+		if ( mTotalTimelineBGTex == null )
 		{
-			m_timelineBGTex = new Texture2D((int)window_size.x, (int)window_size.y);
+			mTotalTimelineBGTex = new Texture2D((int)window_size.x, (int)window_size.y);
 		}
 		int i = 0, j = 0;
 		for (i = 0; i < (int)window_size.x; ++i)
 		{
 			for (j = 0; j < (int)window_size.y; ++j)
 			{
-				m_timelineBGTex.SetPixel( i, j, Color.white );
+				mTotalTimelineBGTex.SetPixel( i, j, Color.white );
 			}
 		}
 	}
+
 	private void TimeLine(float rate, Color _color)
 	{
 		for(int j=0 ; j<(int)window_size.y ; j++)
 		{
-			m_timelineBGTex.SetPixel( (int)(rate*window_size.x) , j, _color);
+			mTotalTimelineBGTex.SetPixel( (int)(rate*window_size.x) , j, _color);
 		}
 	}
 
+	private ActionObject.ActionType mActionEventType;
 	public void Draw( ActionTable actable )
 	{
 		GUILayout.BeginVertical();
 		TimeLine();
-		for(int i = 0 ; i<m_Events.Count ; i++)
+		for(int i = 0 ; i<mEvents.Count ; i++)
 		{
-			float rate = m_Events[i].time/m_Time;
+			float rate = mEvents[i].mTime/mTotalTime;
 			TimeLine(rate, Color.red);
 		}
-		if(CurrentEvent != null)
+		if(mCurrentEvent != null)
 		{
-			float rate = CurrentEvent.time/m_Time;
+			float rate = mCurrentEvent.mTime/mTotalTime;
 			TimeLine(rate, Color.blue);
 		}
-		m_timelineBGTex.Apply();
-		GUILayout.Label(m_timelineBGTex);
+		mTotalTimelineBGTex.Apply();
+		GUILayout.Label(mTotalTimelineBGTex);
 
 		GUILayout.BeginHorizontal();
-		GUILayout.Label("============== Action " + m_Name + " =================");
+		GUILayout.Label("============== Action =================");
 		GUILayout.EndHorizontal();
-		if(mHiden)
-		{
-			if (GUILayout.Button(">>>Action"))
-			{
-				mHiden = false;
-			}
-			GUILayout.EndVertical();
-			return;
-		}
-		else
-		{
-			if (GUILayout.Button("<<<Action"))
-			{
-				mHiden = true;
-			}
-		}
 
 		{
 			GUILayout.BeginHorizontal();
-			GUILayout.Label("Name");
-			this.m_Name = GUILayout.TextField(this.m_Name);
-			GUILayout.Label("Time");
-			this.m_Time = EditorGUILayout.FloatField(this.m_Time);
-			this.m_IsLookTarget = GUILayout.Toggle(this.m_IsLookTarget ,"LookTarget");
-			if (GUILayout.Button("add Event"))
+
+			GUILayout.BeginHorizontal();
+			// this.mName = EditorGUILayout.TextField("Name",this.mName);
+			this.mTotalTime = EditorGUILayout.FloatField("Total Time", this.mTotalTime);
+			mActionEventType = (ActionObject.ActionType)EditorGUILayout.EnumPopup("Event Type",mActionEventType);
+			GUILayout.EndHorizontal();
+
+			GUILayout.BeginHorizontal();
+			if (GUILayout.Button("Change Event"))
 			{
-				ActionObject.Event ev = new ActionObject.Event();
-				this.m_Events.Add(ev);
+				if(mCurrentEventIndex >= 0 && mCurrentEventIndex < mEvents.Count)
+				{
+					ActionEvent ev = ActionFactory.CreateActionEvent(mActionEventType);
+					if(ev != null)
+					{
+						ev.SetActionObject(this);
+						this.mEvents[mCurrentEventIndex] = ev;
+						this.mCurrentEvent = ev;
+					}
+				}
 			}
-			if (GUILayout.Button("delete Event"))
+			if (GUILayout.Button("Add Event"))
+			{
+				ActionEvent ev = ActionFactory.CreateActionEvent(mActionEventType);
+				if(ev != null)
+				{
+					ev.SetActionObject(this);
+					mCurrentEvent = ev;
+					mCurrentEventIndex = mEvents.Count;
+					this.mEvents.Add(ev);
+				}
+			}
+			if (GUILayout.Button("Delete Event"))
 			{
 				if(EditorUtility.DisplayDialog("Remove Event","Are you sure to remove Event?","Remove","Cancel"))
 				{
-					m_Events.Remove(mCurrentEvent);
-					mCurrentEvent = null;
-					mCurrentEventIndex = -1;
+					if(mCurrentEvent != null)
+					{
+						mEvents.Remove(mCurrentEvent);
+						mCurrentEvent = null;
+						mCurrentEventIndex = -1;
+					}
 				}
 			}
+			GUILayout.EndHorizontal();
+
 			GUILayout.EndHorizontal();
 		}
 		{
 			GUILayout.BeginHorizontal();
-			for(int i = 0 ; i<m_Events.Count ; i++ )
+			for(int i = 0 ; i<mEvents.Count ; i++ )
 			{
-				ActionObject.Event ev =this.m_Events[i];
+				ActionEvent ev =this.mEvents[i];
 				// ev.Draw(this);
 				if (GUILayout.Button("" + i))
 				{
@@ -217,13 +267,6 @@ public partial class ActionObject
 				mCurrentEvent.Draw(this);
 			}
 			GUILayout.EndVertical();
-			// GUILayout.BeginVertical();
-			// for(int i = 0 ; i<m_Events.Count ; i++ )
-			// {
-			// 	ActionObject.Event ev =this.m_Events[i];
-			// 	ev.Draw(this);
-			// }
-			// GUILayout.EndVertical();
 		}
 		GUILayout.EndVertical();
 

@@ -29,7 +29,6 @@ public class ActionExcuteManager : MonoBehaviour
 	}
 
 	public List<ActionExcute> mListExcute = new List<ActionExcute>(16);
-	public List<ActionExcute> mRemoveListExcute = new List<ActionExcute>(16);
 
 	void Awake()
 	{
@@ -47,39 +46,27 @@ public class ActionExcuteManager : MonoBehaviour
 		}
 	}
 
-	public ActionExcute StartAction( ActionTable table , ICustomObject o )
+	public ActionExcute StartAction( ActionObject actObj , ICustomObject o )
 	{
-		// GameObject obj = new GameObject("ActionExcute");
-		// ActionExcute ac = obj.AddComponent<ActionExcute>();
 		ActionExcute ac = new ActionExcute();
-		ac.m_Table = table;
-		// ac.m_HitData = hitdata;
-		ac.StartAction(o);
+		ac.StartAction(o, actObj);
 		mListExcute.Add(ac);
 		return ac;
 	}
 
 	void Update()
 	{
-		for(int i = 0 ; i<mListExcute.Count ; i++)
+		for(int i = 0 ; i<mListExcute.Count ;)
 		{
+			mListExcute[i].Update();
 			if(mListExcute[i].mIsOver)
 			{
-				mRemoveListExcute.Add(mListExcute[i]);
+				mListExcute.RemoveAt(i);
 			}
 			else
 			{
-				mListExcute[i].Update();
+				i++;
 			}
-		}
-
-		if(mRemoveListExcute.Count > 0)
-		{
-			for(int i = 0 ; i<mRemoveListExcute.Count ; i++)
-			{
-				mListExcute.Remove(mRemoveListExcute[i]);
-			}
-			mRemoveListExcute.Clear();
 		}
 	}
 

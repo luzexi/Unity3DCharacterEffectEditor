@@ -19,7 +19,7 @@ public class ActionEditWindow : EditorWindow
 	private Vector2 scrollPosition;
 
 
-	[MenuItem("Tool/ActionEditWindow")]
+	[MenuItem("Tools/ActionEditWindow")]
     public static void Init()
     {
        // ActionEditPanel window = EditorWindow.GetWindow<ActionEditPanel>();
@@ -52,15 +52,15 @@ public class ActionEditWindow : EditorWindow
         		this.m_ActionTable.previewCharacterSource= null;
         		this.m_ActionTable.player = null;
         	}
-        	// this.m_ActionTable = new ActionTable();
-        	this.m_ActionTable = ScriptableObject.CreateInstance<ActionTable>();
+        	this.m_ActionTable = new ActionTable();
+        	// this.m_ActionTable = ScriptableObject.CreateInstance<ActionTable>();
         	this.m_ActionTable.Init();
             this.path = string.Empty;
 			this.fileName = "NewAction";
         }
         if (GUILayout.Button("Load Action"))
         {
-        	this.path = EditorUtility.OpenFilePanel("Open Asset...", Application.dataPath + "/App/Art/Resources/Battle/Action/", "asset");
+        	this.path = EditorUtility.OpenFilePanel("Open Asset...", Application.dataPath + "/App/Art/Resources/Battle/Action/", "json");
             if (this.path != string.Empty)
             {
                 this.m_ActionTable.OnLoad(this.path);
@@ -69,7 +69,7 @@ public class ActionEditWindow : EditorWindow
         }
         if (GUILayout.Button("Save Action"))
         {
-        	this.path = EditorUtility.SaveFilePanel("Save Asset...", Application.dataPath + "/App/Art/Resources/Battle/Action/",this.fileName,"asset");
+        	this.path = EditorUtility.SaveFilePanel("Save Asset...", Application.dataPath + "/App/Art/Resources/Battle/Action/",this.fileName,"json");
         	if( this.path != string.Empty )
         	{
         		this.m_ActionTable.OnSave(path);

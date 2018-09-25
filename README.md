@@ -1,5 +1,9 @@
 # Unity3D Character Skill Editor
 
+### Welcome to my blog [www.luzexi.com](http://www.luzexi.com)
+
+### Use Unity2018 version
+
 Unity3D 技能编辑器
 
 目的：

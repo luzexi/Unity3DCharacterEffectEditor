@@ -16,19 +16,18 @@ using UnityEditor;
 
 
 
-[System.Serializable]
-public class ActionTable : ScriptableObject
+
+public class ActionTable
 {
-	[SerializeField]
 	public ActionObject m_ActionObject = null;
 
-	public void CopyFrom( ActionTable src )
+	public void CopyFrom( ActionObject src )
     {
 		// m_ActionObjects = new List<ActionObject>();
 		// orderingActionTable	= src.orderingActionTable;
 		// m_IsLookTarget = src.m_IsLookTarget;
 		m_ActionObject = new ActionObject();
-		m_ActionObject.CopyFrom( src.m_ActionObject );
+		m_ActionObject.CopyFrom( src );
     }
 
     public void Init()
@@ -61,7 +60,7 @@ public class ActionTable : ScriptableObject
 				{
 					cam = new GameObject("Main Camera");
 				}
-				GameCamera game_c = cam.GetComponent<GameCamera>();
+				TempSkillEditorCamera game_c = cam.GetComponent<TempSkillEditorCamera>();
 				game_c.m_Target = this.player.transform;
 				// GameObject ingameObj = GameObject.Instantiate(Resources.Load("Scene/InGame")) as GameObject;
 				// InGameManager.I.GameCamera = game_c.GetComponent<Camera>();
@@ -79,7 +78,7 @@ public class ActionTable : ScriptableObject
 					this.player.transform.localPosition = Vector3.zero;
 					this.player.transform.localRotation = Quaternion.identity;
 					// this.player.PlayAction(this);
-					ActionExcuteManager.instance.StartAction(this,this.player);
+					ActionExcuteManager.instance.StartAction(m_ActionObject,this.player);
 				}
 			}
 			GUILayout.EndHorizontal();
@@ -127,35 +126,19 @@ public class ActionTable : ScriptableObject
 
     public void OnLoad( string path )
     {
-        path = path.Substring(path.IndexOf("Assets"));
-        ActionTable load_scene_data = (ActionTable)Instantiate(AssetDatabase.LoadAssetAtPath(path, typeof(ActionTable)));
-        if (load_scene_data != null)
-        {
-            CopyFrom(load_scene_data);
-        }
+    	string json_str = File.ReadAllText(path);
+    	object obj = MiniJSON.Json.Deserialize(json_str);
+    	m_ActionObject = new ActionObject();
+        m_ActionObject.ReadJson((Dictionary<string,object>)obj);
     }
 
     public void OnSave( string path )
     {
-        string asset_path = path.Substring(path.IndexOf("Assets"));//path setup
-
-        ActionTable ao = (ActionTable)AssetDatabase.LoadAssetAtPath(asset_path, typeof(ActionTable));
-        if (ao == null)
-        {
-            ActionTable new_ao = ScriptableObject.CreateInstance<ActionTable>();
-            if (new_ao != null)
-            {
-                AssetDatabase.CreateAsset(new_ao, asset_path);
-                ao = new_ao;
-            }
-        }
-        if (ao != null)
-        {
-            ao.CopyFrom( this );
-            EditorUtility.SetDirty(ao);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-        }
+    	Dictionary<string, object> obj = new Dictionary<string, object>();
+    	m_ActionObject.WriteJson(obj);
+    	string json_str = MiniJSON.Json.Serialize(obj);
+    	File.WriteAllText(path,json_str);
+    	AssetDatabase.Refresh();
     }
 
 #endif
